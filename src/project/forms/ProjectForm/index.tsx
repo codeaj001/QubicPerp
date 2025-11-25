@@ -4,7 +4,6 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useCurrencies } from "@/currency/hooks/useCurrencies";
-import { isSameObject } from "@/lib/object";
 import { generateSlugOf } from "@/lib/string";
 import { Button } from "@/shared/components/Button";
 import { Fieldset } from "@/shared/components/Fieldset";
@@ -21,7 +20,7 @@ import { ProjectTabLabels } from "../../../project/project.constants";
 import { ProjectFormTabs } from "../../../project/project.types";
 import { getDefaultProjectFormValues } from "./ProjectForm.helpers";
 import styles from "./ProjectForm.module.scss";
-import { DraftFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
+import { BaseFormSchema, DraftFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
 import { ProjectFormProps, ProjectFormValues } from "./ProjectForm.types";
 
 /**
@@ -37,18 +36,16 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
 
   const formMethods = useForm<ProjectFormValues>({
     defaultValues: defaultValues ?? getDefaultProjectFormValues(),
-    resolver: zodResolver(DraftFormSchema),
+    resolver: zodResolver(defaultValues?.id ? DraftFormSchema : BaseFormSchema),
     mode: "onChange",
   });
 
   const {
     watch,
-    reset,
     control,
     setValue,
     getValues,
     handleSubmit,
-    trigger,
     formState: { isDirty, isValid, errors, dirtyFields },
   } = formMethods;
 
@@ -167,17 +164,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     }
   }, [name]);
 
-  useEffect(() => {
-    if (defaultValues && !isSameObject(defaultValues, getValues())) {
-      reset(defaultValues);
-      if (!defaultValues.id) {
-        trigger();
-      }
-    } else if (!defaultValues) {
-      trigger();
-    }
-  }, [defaultValues, trigger, getValues, reset]);
-
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmitHandler)} className={styles.form}>
@@ -189,15 +175,16 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
           </Fieldset>
         )}
 
-        {/* Tabs */}
-        <div className={styles.tabs}>
-          <Tabs<ProjectFormTabs>
-            activeId={activeTab}
-            itemClassName={styles.tab}
-            tabs={currentTabs}
-            onChange={(tabId) => setActiveTab(tabId)}
-          />
-        </div>
+        {defaultValues?.id && (
+          <div className={styles.tabs}>
+            <Tabs<ProjectFormTabs>
+              activeId={activeTab}
+              itemClassName={styles.tab}
+              tabs={currentTabs}
+              onChange={(tabId) => setActiveTab(tabId)}
+            />
+          </div>
+        )}
 
         {/* Page Container */}
         <Fieldset title={ProjectTabLabels[activeTab]}>{renderTab()}</Fieldset>

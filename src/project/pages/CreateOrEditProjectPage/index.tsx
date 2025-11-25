@@ -165,6 +165,10 @@ export const CreateOrEditProjectPage: React.FC = () => {
     );
   }
 
+  if (!project.data && !project.isLoading && params.slug) {
+    return <Loader variant={"full"} size={52} />;
+  }
+
   return (
     <div className={styles.layout}>
       <div className={styles.header}>
