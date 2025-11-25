@@ -33,7 +33,7 @@ interface DateInputProps {
   /**
    * The value of the date input.
    */
-  readonly value: Date;
+  readonly value: Date | undefined | null;
   /**
    * The onChange handler of the date input.
    */
@@ -66,7 +66,7 @@ export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
         <DatePicker
           showTimeSelect
           className={classNames(styles.input, error && styles.withError)}
-          selected={new Date(value)}
+          selected={value ? new Date(value) : null}
           onChange={onChange}
           placeholderText={placeholder}
           dateFormat="yyyy/MM/dd HH:mm"

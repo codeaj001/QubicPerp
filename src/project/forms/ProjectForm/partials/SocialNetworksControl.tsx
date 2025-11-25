@@ -13,6 +13,8 @@ interface SocialNetworksControlProps {
 }
 
 export const SocialNetworksControl = ({ control, errors, dirtyFields }: SocialNetworksControlProps) => {
+  const socialDirtyFields = typeof dirtyFields.social === "object" ? dirtyFields.social : {};
+
   return (
     <div className={classNames(styles.grid, styles.two)}>
       <Controller
@@ -21,11 +23,12 @@ export const SocialNetworksControl = ({ control, errors, dirtyFields }: SocialNe
         render={({ field }) => (
           <TextInput
             {...field}
+            value={field.value ?? ""}
             label="Discord URL"
             type="text"
             placeholder="https://discord.com/invite..."
             icon={<RiDiscordFill />}
-            error={dirtyFields.social?.discordUrl ? errors.social?.discordUrl?.message : undefined}
+            error={socialDirtyFields.discordUrl ? errors.social?.discordUrl?.message : undefined}
           />
         )}
       />
@@ -35,11 +38,12 @@ export const SocialNetworksControl = ({ control, errors, dirtyFields }: SocialNe
         render={({ field }) => (
           <TextInput
             {...field}
+            value={field.value ?? ""}
             label="Instagram URL"
             type="text"
             placeholder="https://www.instagram.com/..."
             icon={<RiInstagramFill />}
-            error={dirtyFields.social?.instagramUrl ? errors.social?.instagramUrl?.message : undefined}
+            error={socialDirtyFields.instagramUrl ? errors.social?.instagramUrl?.message : undefined}
           />
         )}
       />
@@ -49,11 +53,12 @@ export const SocialNetworksControl = ({ control, errors, dirtyFields }: SocialNe
         render={({ field }) => (
           <TextInput
             {...field}
+            value={field.value ?? ""}
             label="Medium URL"
             type="text"
             placeholder="https://medium.com/@..."
             icon={<RiMediumFill />}
-            error={dirtyFields.social?.mediumUrl ? errors.social?.mediumUrl?.message : undefined}
+            error={socialDirtyFields.mediumUrl ? errors.social?.mediumUrl?.message : undefined}
           />
         )}
       />
@@ -63,11 +68,12 @@ export const SocialNetworksControl = ({ control, errors, dirtyFields }: SocialNe
         render={({ field }) => (
           <TextInput
             {...field}
+            value={field.value ?? ""}
             label="X URL"
             type="text"
             placeholder="https://x.com/..."
             icon={<RiTwitterXFill />}
-            error={dirtyFields.social?.xUrl ? errors.social?.xUrl?.message : undefined}
+            error={socialDirtyFields.xUrl ? errors.social?.xUrl?.message : undefined}
           />
         )}
       />
@@ -77,11 +83,12 @@ export const SocialNetworksControl = ({ control, errors, dirtyFields }: SocialNe
         render={({ field }) => (
           <TextInput
             {...field}
+            value={field.value ?? ""}
             label="Telegram URL"
             type="text"
             placeholder="https://t.me/..."
             icon={<RiTelegramFill />}
-            error={dirtyFields.social?.telegramUrl ? errors.social?.telegramUrl?.message : undefined}
+            error={socialDirtyFields.telegramUrl ? errors.social?.telegramUrl?.message : undefined}
           />
         )}
       />

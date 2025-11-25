@@ -36,6 +36,7 @@ export const VestingOptionsControl = ({ control, errors, dirtyFields }: VestingO
         render={({ field }) => (
           <DateInput
             {...field}
+            value={field.value ?? undefined}
             label="Token Listing Date"
             description={"Select the date when your token will be listed."}
             placeholder="YYYY-MM-DD HH:mm"
@@ -49,6 +50,7 @@ export const VestingOptionsControl = ({ control, errors, dirtyFields }: VestingO
         render={({ field }) => (
           <TextInput
             {...field}
+            value={field.value ?? ""}
             label="Tokens Unlocked at TGE"
             type="number"
             placeholder="Tokens Unlocked at TGE"
@@ -66,6 +68,7 @@ export const VestingOptionsControl = ({ control, errors, dirtyFields }: VestingO
         render={({ field }) => (
           <TextInput
             {...field}
+            value={field.value ?? ""}
             label="Cliff Period"
             type="number"
             placeholder="Cliff Period"
@@ -83,6 +86,7 @@ export const VestingOptionsControl = ({ control, errors, dirtyFields }: VestingO
         render={({ field }) => (
           <TextInput
             {...field}
+            value={field.value ?? ""}
             label="Vesting Duration"
             type="number"
             placeholder="Vesting Duration"

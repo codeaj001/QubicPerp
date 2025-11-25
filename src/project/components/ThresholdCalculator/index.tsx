@@ -14,7 +14,7 @@ interface ThresholdCalculatorProps {
   /**
    * The threshold percentage for the project
    */
-  readonly threshold: Project["threshold"];
+  readonly threshold: Project["threshold"] | undefined | null;
   /**
    * The currency object for display
    */
@@ -22,7 +22,7 @@ interface ThresholdCalculatorProps {
   /**
    * The amount to raise for the project
    */
-  readonly amountToRaise: Project["amountToRaise"];
+  readonly amountToRaise: Project["amountToRaise"] | undefined | null;
 }
 
 /**
@@ -37,6 +37,9 @@ interface ThresholdCalculatorProps {
 export const ThresholdCalculator: React.FC<ThresholdCalculatorProps> = ({ threshold, currency, amountToRaise }) => {
   if (!threshold) return null;
 
+  // Ensure amountToRaise is a valid number before calculating
+  const validAmount = amountToRaise ?? 0;
+
   return (
     <div className={classNames(styles.grid, styles.two, styles.amountToRaise)}>
       <TextInput
@@ -44,7 +47,7 @@ export const ThresholdCalculator: React.FC<ThresholdCalculatorProps> = ({ thresh
         type="string"
         placeholder="Minimum Amount"
         symbol={currency.name}
-        value={amountToRaise && amountToRaise > 0 ? formatPrice(amountToRaise - (amountToRaise * threshold) / 100) : 0}
+        value={validAmount > 0 ? formatPrice(validAmount - (validAmount * threshold) / 100) : 0}
         disabled
       />
       <TextInput
@@ -52,7 +55,7 @@ export const ThresholdCalculator: React.FC<ThresholdCalculatorProps> = ({ thresh
         type="string"
         placeholder="Maximum Amount"
         symbol={currency.name}
-        value={amountToRaise && amountToRaise > 0 ? formatPrice(amountToRaise + (amountToRaise * threshold) / 100) : 0}
+        value={validAmount > 0 ? formatPrice(validAmount + (validAmount * threshold) / 100) : 0}
         disabled
       />
     </div>

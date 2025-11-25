@@ -21,7 +21,7 @@ import { ProjectTabLabels } from "../../../project/project.constants";
 import { ProjectFormTabs } from "../../../project/project.types";
 import { getDefaultProjectFormValues } from "./ProjectForm.helpers";
 import styles from "./ProjectForm.module.scss";
-import { EntryFormSchema, OptionalFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
+import { DraftFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
 import { ProjectFormProps, ProjectFormValues } from "./ProjectForm.types";
 
 /**
@@ -37,9 +37,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
 
   const formMethods = useForm<ProjectFormValues>({
     defaultValues: defaultValues ?? getDefaultProjectFormValues(),
-    resolver: zodResolver(defaultValues?.id ? OptionalFormSchema : EntryFormSchema),
-    reValidateMode: "onChange",
-    mode: "all",
+    resolver: zodResolver(DraftFormSchema),
+    mode: "onChange",
   });
 
   const {
@@ -49,6 +48,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     setValue,
     getValues,
     handleSubmit,
+    trigger,
     formState: { isDirty, isValid, errors, dirtyFields },
   } = formMethods;
 
@@ -57,7 +57,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
   /**
    * Memoized value that determines if the form is ready to be published.
    * A form is considered ready for publishing when:
-   * 1. All required fields pass schema validation
+   * 1. All required fields pass schema validation (ProjectFormSchema - strict)
    * 2. The form is not in a dirty state (no unsaved changes)
    *
    * @returns True if the form is valid and not dirty, false otherwise
@@ -151,9 +151,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
 
   /**
    * Sets the default currency value when currencies are loaded.
-   *
-   * @param {boolean} isCurrenciesLoading - Indicates if the currencies are still loading.
-   * @param {Array} currencies - The list of available currencies.
    */
   useEffect(() => {
     if (!isCurrenciesLoading && currencies && currencies.length > 0) {
@@ -163,8 +160,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
 
   /**
    * Generates and sets the slug value based on the project name.
-   *
-   * @param {string} name - The name of the project.
    */
   useEffect(() => {
     if (name) {
@@ -175,8 +170,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
   useEffect(() => {
     if (defaultValues && !isSameObject(defaultValues, getValues())) {
       reset(defaultValues);
+      if (!defaultValues.id) {
+        trigger();
+      }
+    } else if (!defaultValues) {
+      trigger();
     }
-  }, [defaultValues]);
+  }, [defaultValues, trigger, getValues, reset]);
 
   return (
     <FormProvider {...formMethods}>

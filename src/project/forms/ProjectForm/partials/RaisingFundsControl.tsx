@@ -68,6 +68,7 @@ export const RaisingFundsControl = ({ control, errors, dirtyFields }: RaisingFun
               render={({ field }) => (
                 <TextInput
                   {...field}
+                  value={field.value ?? ""}
                   label="Amount to Raise"
                   type="number"
                   placeholder="Amount to Raise"
@@ -96,13 +97,17 @@ export const RaisingFundsControl = ({ control, errors, dirtyFields }: RaisingFun
                   }
                   min={5}
                   max={25}
-                  value={field.value}
+                  value={Number(field.value ?? 0)}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
                   disabled={!amountToRaise}
                   renderValue={(value) => <Typography size={"small"}>{value}%</Typography>}
                 />
-                {currency && amountToRaise && (
-                  <ThresholdCalculator threshold={threshold} currency={currency} amountToRaise={amountToRaise} />
+                {currency && amountToRaise != null && (
+                  <ThresholdCalculator
+                    threshold={Number(threshold ?? 0)}
+                    currency={currency}
+                    amountToRaise={Number(amountToRaise)}
+                  />
                 )}
               </div>
             )}
@@ -116,6 +121,7 @@ export const RaisingFundsControl = ({ control, errors, dirtyFields }: RaisingFun
           render={({ field }) => (
             <TextInput
               {...field}
+              value={field.value ?? ""}
               label="Token For Sale"
               type="number"
               placeholder={formatPrice(500000, undefined, 0)}
@@ -135,6 +141,7 @@ export const RaisingFundsControl = ({ control, errors, dirtyFields }: RaisingFun
           render={({ field }) => (
             <DateInput
               {...field}
+              value={field.value ?? undefined}
               label="ICO Start date"
               description={"Select the date you want your project to start its initial registration phase."}
               placeholder="YYYY-MM-DD HH:mm"

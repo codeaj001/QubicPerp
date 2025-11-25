@@ -45,27 +45,41 @@ export const useUpsertProject = () => {
       formData.append("websiteUrl", data.websiteUrl);
 
       // Token Info
-      formData.append("tokenName", data.tokenName ?? "");
+      if (data.tokenName) formData.append("tokenName", data.tokenName);
 
       if (data.tokenImageUrl && data.tokenImageUrl instanceof File) {
         formData.append("tokenImage", data.tokenImageUrl);
       }
 
-      formData.append("tokensSupply", String(data.tokensSupply));
+      if (data.tokensSupply != null) {
+        formData.append("tokensSupply", String(data.tokensSupply));
+      }
 
       // Raising Info
-      formData.append("startDate", String(data.startDate));
-      formData.append("amountToRaise", String(data.amountToRaise));
-      formData.append("tokensForSale", String(data.tokensForSale));
-      formData.append("unlockTokensTGE", String(data.unlockTokensTGE));
-      formData.append("threshold", String(data.threshold));
+      if (data.startDate) formData.append("startDate", String(data.startDate));
+
+      if (data.amountToRaise != null) {
+        formData.append("amountToRaise", String(data.amountToRaise));
+      }
+
+      if (data.tokensForSale != null) {
+        formData.append("tokensForSale", String(data.tokensForSale));
+      }
+
+      if (data.unlockTokensTGE != null) {
+        formData.append("unlockTokensTGE", String(data.unlockTokensTGE));
+      }
+
+      if (data.threshold != null) {
+        formData.append("threshold", String(data.threshold));
+      }
 
       // Social URLs
-      formData.append("instagramUrl", data.social?.instagramUrl ?? "");
-      formData.append("discordUrl", data.social?.discordUrl ?? "");
-      formData.append("xUrl", data.social?.xUrl ?? "");
-      formData.append("mediumUrl", data.social?.mediumUrl ?? "");
-      formData.append("telegramUrl", data.social?.telegramUrl ?? "");
+      if (data.social?.instagramUrl) formData.append("instagramUrl", data.social.instagramUrl);
+      if (data.social?.discordUrl) formData.append("discordUrl", data.social.discordUrl);
+      if (data.social?.xUrl) formData.append("xUrl", data.social.xUrl);
+      if (data.social?.mediumUrl) formData.append("mediumUrl", data.social.mediumUrl);
+      if (data.social?.telegramUrl) formData.append("telegramUrl", data.social.telegramUrl);
 
       // Documents
       if (data.whitepaperUrl && data.whitepaperUrl instanceof File) {
@@ -81,12 +95,24 @@ export const useUpsertProject = () => {
       }
 
       // Currency
-      formData.append("currencyId", data.currency.id.toString());
+      if (data.currency?.id) {
+        formData.append("currencyId", data.currency.id.toString());
+      }
 
       // Vesting Info
-      formData.append("TGEDate", String(data.TGEDate) ?? addDays(new Date(), 10).toISOString());
-      formData.append("cliff", String(data.cliff));
-      formData.append("vestingDays", String(data.vestingDays));
+      if (data.TGEDate) {
+        formData.append("TGEDate", String(data.TGEDate));
+      } else {
+        formData.append("TGEDate", addDays(new Date(), 10).toISOString());
+      }
+
+      if (data.cliff != null) {
+        formData.append("cliff", String(data.cliff));
+      }
+
+      if (data.vestingDays != null) {
+        formData.append("vestingDays", String(data.vestingDays));
+      }
 
       // Account
       formData.append("walletAddress", wallet.publicKey);

@@ -2,12 +2,12 @@ import { z } from "zod";
 
 import { Project } from "@/project/project.types";
 
-import { ProjectFormSchema } from "./ProjectForm.schema";
+import { DraftFormSchema } from "./ProjectForm.schema";
 
 /**
  * Type definition for the values derived from the ProjectFormSchema using Zod's infer method.
  */
-export type ProjectFormValues = z.infer<typeof ProjectFormSchema>;
+export type ProjectFormValues = z.infer<typeof DraftFormSchema>;
 
 /**
  * Type definition for the properties expected by the ProjectNameForm component.

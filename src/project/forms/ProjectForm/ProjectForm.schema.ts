@@ -5,93 +5,128 @@ import { CurrencySchema } from "@/currency/currency.schema";
 import { ProjectSchema } from "../../project.schema";
 
 /**
- * Base schema with required name and slug fields, and all other fields optional
+ * Schema for Draft Mode - All fields optional except basic text fields
  */
-export const OptionalFormSchema = z.object({
-  // Basic project information
+export const DraftFormSchema = z.object({
   id: ProjectSchema.shape.id.optional(),
   name: ProjectSchema.shape.name,
   slug: ProjectSchema.shape.slug,
   email: ProjectSchema.shape.email,
-  description: ProjectSchema.shape.description.optional().or(z.literal("")),
+  description: ProjectSchema.shape.description,
+  websiteUrl: ProjectSchema.shape.websiteUrl,
 
-  // Token details and financial information
-  tokensSupply: ProjectSchema.shape.tokensSupply.optional().or(z.literal("")),
-  amountToRaise: ProjectSchema.shape.amountToRaise.optional().or(z.literal("")),
-  startDate: ProjectSchema.shape.startDate.optional(),
-  tokenName: ProjectSchema.shape.tokenName.optional().or(z.literal("")),
-  tokensForSale: ProjectSchema.shape.tokensForSale.optional().or(z.literal("")),
+  // Images - optional for draft
+  photoUrl: z
+    .union([z.instanceof(File), z.string().min(1)])
+    .optional()
+    .nullable(),
+  bannerUrl: z
+    .union([z.instanceof(File), z.string().min(1)])
+    .optional()
+    .nullable(),
 
-  // Vesting and distribution parameters
-  threshold: ProjectSchema.shape.threshold.optional().or(z.literal("")),
-  cliff: ProjectSchema.shape.cliff.optional().or(z.literal("")),
-  TGEDate: ProjectSchema.shape.TGEDate.optional(),
-  unlockTokensTGE: ProjectSchema.shape.unlockTokensTGE.optional().or(z.literal("")),
-  vestingDays: ProjectSchema.shape.vestingDays.optional().or(z.literal("")),
-  websiteUrl: ProjectSchema.shape.websiteUrl.optional().or(z.literal("")),
+  // Numeric fields - allow 0, undefined, or null
+  tokensSupply: z.number().nonnegative().optional().nullable(),
+  amountToRaise: z.number().nonnegative().optional().nullable(),
+  tokensForSale: z.number().nonnegative().optional().nullable(),
+  tokenPrice: z.number().nonnegative().optional().nullable(),
+  threshold: z.number().nonnegative().optional().nullable(),
+  cliff: z.number().nonnegative().optional().nullable(),
+  unlockTokensTGE: z.number().nonnegative().optional().nullable(),
+  vestingDays: z.number().nonnegative().optional().nullable(),
 
-  // Project media and documentation
-  photoUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
-  bannerUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
-  whitepaperUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
-  litepaperUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
-  tokenomicsUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
-  tokenImageUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
+  // Dates - allow undefined or null
+  startDate: z.date().optional().nullable(),
+  TGEDate: z.date().optional().nullable(),
+
+  // Strings - allow empty string, undefined, or null
+  tokenName: z.string().optional().nullable(),
+
+  // File URLs - allow File, string, undefined, or null
+  whitepaperUrl: z
+    .union([z.instanceof(File), z.string()])
+    .optional()
+    .nullable(),
+  litepaperUrl: z
+    .union([z.instanceof(File), z.string()])
+    .optional()
+    .nullable(),
+  tokenomicsUrl: z
+    .union([z.instanceof(File), z.string()])
+    .optional()
+    .nullable(),
+  tokenImageUrl: z
+    .union([z.instanceof(File), z.string()])
+    .optional()
+    .nullable(),
 
   // Social media links
   social: z
     .object({
-      instagramUrl: ProjectSchema.shape.social.shape.instagramUrl.optional().or(z.literal("")),
-      xUrl: ProjectSchema.shape.social.shape.xUrl.optional().or(z.literal("")),
-      discordUrl: ProjectSchema.shape.social.shape.discordUrl.optional().or(z.literal("")),
-      telegramUrl: ProjectSchema.shape.social.shape.telegramUrl.optional().or(z.literal("")),
-      mediumUrl: ProjectSchema.shape.social.shape.mediumUrl.optional().or(z.literal("")),
+      instagramUrl: z.string().optional().nullable(),
+      xUrl: z.string().optional().nullable(),
+      discordUrl: z.string().optional().nullable(),
+      telegramUrl: z.string().optional().nullable(),
+      mediumUrl: z.string().optional().nullable(),
     })
-    .optional(),
+    .optional()
+    .nullable(),
 
   // Currency information
   currency: CurrencySchema.pick({
     id: true,
     name: true,
-  }).optional(),
+  })
+    .optional()
+    .nullable(),
 });
 
-export const EntryFormSchema = z.object({
+/**
+ * Schema for Publishing (Everything Required and Strict)
+ */
+export const ProjectFormSchema = z.object({
+  id: ProjectSchema.shape.id.optional(),
   name: ProjectSchema.shape.name,
   slug: ProjectSchema.shape.slug,
   email: ProjectSchema.shape.email,
   description: ProjectSchema.shape.description,
   websiteUrl: ProjectSchema.shape.websiteUrl,
-  currency: CurrencySchema.pick({
-    id: true,
-    name: true,
-  }).optional(),
-});
 
-/**
- * Extended schema with all fields required except social media
- */
-export const ProjectFormSchema = OptionalFormSchema.extend({
-  description: ProjectSchema.shape.description,
-  websiteUrl: ProjectSchema.shape.websiteUrl,
+  // Required images
+  photoUrl: z.union([z.instanceof(File), z.string().min(1)]),
+  bannerUrl: z.union([z.instanceof(File), z.string().min(1)]),
+
+  // Strict numeric fields
   tokensSupply: ProjectSchema.shape.tokensSupply,
   amountToRaise: ProjectSchema.shape.amountToRaise,
-  startDate: ProjectSchema.shape.startDate,
-  tokenName: ProjectSchema.shape.tokenName,
   tokensForSale: ProjectSchema.shape.tokensForSale,
+
+  // Strict dates (future dates required)
+  startDate: ProjectSchema.shape.startDate,
+  TGEDate: ProjectSchema.shape.TGEDate,
+
+  tokenName: ProjectSchema.shape.tokenName,
   threshold: ProjectSchema.shape.threshold,
   cliff: ProjectSchema.shape.cliff,
-  TGEDate: ProjectSchema.shape.TGEDate,
   unlockTokensTGE: ProjectSchema.shape.unlockTokensTGE,
   vestingDays: ProjectSchema.shape.vestingDays,
-  photoUrl: z.union([z.instanceof(File), z.string()]),
-  bannerUrl: z.union([z.instanceof(File), z.string()]),
-  whitepaperUrl: z.union([z.instanceof(File), z.string()]),
-  litepaperUrl: z.union([z.instanceof(File), z.string()]),
-  tokenomicsUrl: z.union([z.instanceof(File), z.string()]),
-  tokenImageUrl: z.union([z.instanceof(File), z.string()]),
+
+  // Required documents
+  whitepaperUrl: z.union([z.instanceof(File), z.string().min(1)]),
+  litepaperUrl: z.union([z.instanceof(File), z.string().min(1)]),
+  tokenomicsUrl: z.union([z.instanceof(File), z.string().min(1)]),
+  tokenImageUrl: z.union([z.instanceof(File), z.string().min(1)]),
+
   currency: CurrencySchema.pick({
     id: true,
     name: true,
+  }),
+
+  social: z.object({
+    instagramUrl: z.string().optional().nullable(),
+    xUrl: z.string().optional().nullable(),
+    discordUrl: z.string().optional().nullable(),
+    telegramUrl: z.string().optional().nullable(),
+    mediumUrl: z.string().optional().nullable(),
   }),
 });

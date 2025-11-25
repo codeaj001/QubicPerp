@@ -1,11 +1,11 @@
-import classNames from "clsx";
-import React from "react";
-import { Control, Controller, useFormContext, FieldErrors, FieldNamesMarkedBoolean } from "react-hook-form";
-import { RiImageAddLine } from "react-icons/ri";
-import { ProjectFormValues } from "../ProjectForm.types";
+import { formatPrice } from "@/lib/number";
 import { FileUpload } from "@/shared/components/FileUpload";
 import { TextInput } from "@/shared/components/TextInput";
-import { formatPrice } from "@/lib/number";
+import classNames from "clsx";
+import React from "react";
+import { Control, Controller, FieldErrors, FieldNamesMarkedBoolean, useFormContext } from "react-hook-form";
+import { RiImageAddLine } from "react-icons/ri";
+import { ProjectFormValues } from "../ProjectForm.types";
 
 import styles from "../ProjectForm.module.scss";
 
@@ -49,7 +49,13 @@ export const TokenInformationControl = ({ control, errors, dirtyFields }: TokenI
             name="tokenName"
             control={control}
             render={({ field }) => (
-              <TextInput {...field} label="Token Name" placeholder="Tokens Name" upperCase={true} />
+              <TextInput
+                {...field}
+                value={field.value ?? ""}
+                label="Token Name"
+                placeholder="Tokens Name"
+                upperCase={true}
+              />
             )}
           />
         </div>
@@ -60,6 +66,7 @@ export const TokenInformationControl = ({ control, errors, dirtyFields }: TokenI
             render={({ field }) => (
               <TextInput
                 {...field}
+                value={field.value ?? ""}
                 label="Total Supply"
                 type="number"
                 placeholder={formatPrice(500000)}
