@@ -10,11 +10,22 @@
   padding: 20vh 0;
   width: 100%;
 
-  
+
   display: grid;
   place-items: center;
 }
 
 .container {
   width: 100%;
+}
+
+.placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: $gray-05;
+  background: rgba($black, 0.3);
+  border-radius: 8px;
+  border: 1px solid $gray-02;
 }

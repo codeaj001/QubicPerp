@@ -1,3 +1,5 @@
+@import "@/shared/theme.scss";
+
 .header {
   position: fixed;
   top: 0;
@@ -5,7 +7,8 @@
   right: 0;
   z-index: 20;
 
-  &:before, &:after {
+  &:before,
+  &:after {
     content: "";
     position: absolute;
     opacity: 0;
@@ -13,23 +16,18 @@
   }
 
   &:before {
-    background: linear-gradient(90deg, rgb(27 43 13 / 70%) 0%, rgba(0, 0, 0, 0.9) 50%, rgba(0, 0, 0, 0.6) 100%);
-    backdrop-filter: blur(44px);
+    background: rgba(11, 14, 17, 0.8); // Darker background for QubicPerp
+    backdrop-filter: blur(12px);
     height: 100%;
     inset: 0;
     z-index: 0;
-  }
-
-  &:after {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, $green-06 50%, rgba(0, 0, 0, 0) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   &.visible {
-    &:after, &:before {
+
+    &:after,
+    &:before {
       opacity: 1;
     }
   }
@@ -39,54 +37,84 @@
   position: relative;
   z-index: 2;
 
-  display: grid;
-  grid-template-columns: 0fr 1fr 0fr;
-  gap: 22px;
-  padding: 0 32px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  place-items: center;
+  padding: 0 32px;
   height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 
   @include respond-to(mobile) {
-    grid-template-columns: 1fr auto;
-    place-items: center left;
+    padding: 0 16px;
+  }
+}
+
+.brandLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+
+  .brand {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(45deg, #fff, #8bf827);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .tag {
+    font-size: 10px;
+    background: rgba(139, 248, 39, 0.1);
+    color: #8bf827;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(139, 248, 39, 0.3);
   }
 }
 
 .navigator {
   display: flex;
   flex-direction: row;
-  gap: 40px;
+  gap: 32px;
 
   a {
-    color: #C7D2BE;
+    color: #b2b5be;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
 
     &:hover {
       color: #fff;
     }
 
-    transition: color 120ms linear;
+    &.isActive {
+      color: #8bf827;
+    }
   }
 }
 
 .row {
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 16px;
   align-items: center;
 }
 
-.isActive {
-  color: #8af827 !important;
-}
-
 .links {
+  display: flex;
+  gap: 12px;
+
   button {
-    color: #478911 !important;
+    color: #788199 !important;
 
     &:hover {
-      color: #C7D2BE !important;
+      color: #fff !important;
     }
   }
 }

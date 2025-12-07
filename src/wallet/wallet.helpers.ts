@@ -6,6 +6,9 @@
  * @returns A formatted string like "Abcx....03845".
  */
 export function shortHex(hex: string, length = 4): string {
+  if (!hex || typeof hex !== "string") {
+    return "";
+  }
   if (hex.length <= 2 * length + 3) {
     return hex;
   }

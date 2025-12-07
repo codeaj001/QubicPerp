@@ -19,10 +19,9 @@ export enum UserTypes {
  * @property {string} CLAIM_TOKENS - Tab for token claim functionality
  */
 export enum UserSettingsTabs {
-  MY_TIER = "my-tier",
-  CHANGE_TIER = "change-tier",
-  MY_PROJECTS = "my-projects",
-  CLAIM_TOKENS = "claim-tokens",
+  OVERVIEW = "overview",
+  HISTORY = "history",
+  PREFERENCES = "preferences",
 }
 
 /**

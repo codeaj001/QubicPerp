@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 import classNames from "clsx";
-import { RiAliensFill, RiCoinFill, RiWallet2Fill } from "react-icons/ri";
+import { RiUserSettingsLine, RiCoinFill, RiWallet2Fill } from "react-icons/ri";
 
 import { formatNumber } from "@/lib/number";
 import { Loader } from "@/shared/components/Loader";
@@ -52,7 +52,7 @@ export const UserSettingsLayout: React.FC = () => {
     return (
       <div className={styles.container}>
         <ErrorPage
-          code={<RiAliensFill className={styles.alien} />}
+          code={<RiUserSettingsLine className={styles.alien} />}
           title={"No Signal"}
           description={"To create a project, you need to be connected to a wallet."}
           actions={
@@ -86,7 +86,7 @@ export const UserSettingsLayout: React.FC = () => {
       <div className={classNames(styles.container, styles.lighten)}>
         <div className={styles.header}>
           <div className={classNames(styles.inline, styles.center)}>
-            <RiAliensFill size={42} />
+            <RiUserSettingsLine size={42} />
             <div className={styles.title}>
               <Typography variant={"heading"} size={"xlarge"}>
                 User Settings

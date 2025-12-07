@@ -23,8 +23,10 @@ import type {
   isErrorWithMessage
 } from "../wallet.types";
 import { connectTypes, getSnapOrigin, tickOffset } from "./config";
+import { getSnap } from "./utils/snap";
 import { MetaMaskProvider } from "./MetamaskContext";
 import { useWalletConnect } from "./WalletConnectContext";
+import { qubicRpc } from "./services/QubicRpcService";
 
 // Constants from QubicHelper
 const PUBLIC_KEY_LENGTH = 32;
@@ -174,34 +176,36 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
   };
 
   const getTick = async (): Promise<number> => {
-    // console.log('getTickInfo')
-    const tickResult = await fetch(`${httpEndpoint}/v1/tick-info`);
-    const tick = await tickResult.json();
-    // check if tick is valid
-    if (!tick || !tick.tickInfo) {
-      // console.warn('getTickInfo: Invalid tick')
+    try {
+      const tickInfo = await qubicRpc.getTickInfo();
+      return tickInfo.tick;
+    } catch (error) {
+      console.error("getTick failed:", error);
       return 0;
     }
-    return tick.tickInfo.tick;
   };
 
   const getBalance = async (publicId: string): Promise<Balance> => {
-    // console.log('getBalance: for publicId ', publicId)
-    const accountResult = await fetch(`${httpEndpoint}/v1/balances/${publicId}`);
-    const results = await accountResult.json();
-    // check if info is valid
-    if (!results || !results.balance) {
-      // console.warn('getBalance: Invalid balance')
+    try {
+      const balanceData = await qubicRpc.getBalance(publicId);
+      return {
+        id: balanceData.id,
+        balance: Number(balanceData.balance), // Convert string to number
+        validForTick: balanceData.validForTick,
+        latestIncomingTransferTick: balanceData.latestIncomingTransferTick,
+        latestOutgoingTransferTick: balanceData.latestOutgoingTransferTick,
+      };
+    } catch (error) {
+      console.error("getBalance failed:", error);
       return { id: publicId, balance: 0 };
     }
-    return results.balance;
   };
 
   const getTransactionsHistory = async (publicId: string, startTick: number = 1, endTick?: number): Promise<Transaction[]> => {
     // check if endTick is set if not set to current tick
     if (endTick === undefined) {
       const tickInfo = await getTick();
-      endTick = tickInfo.tick;
+      endTick = tickInfo;
     }
     const url = `${httpEndpoint}/v1/identities/${publicId}/transfer-transactions?startTick=${startTick}&endTick=${endTick}`;
     const historyTxsResult = await fetch(url);
@@ -380,30 +384,42 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     };
   };
 
+  const localSignTx = async (helper: QubicHelper, privateKey: string, tx: Uint8Array): Promise<Uint8Array> => {
+    const qCrypto = await Crypto;
+    const idPackage = await helper.createIdPackage(privateKey);
+    const digest = new Uint8Array(DIGEST_LENGTH);
+
+    // The signature is appended at the end of the transaction
+    // We sign everything BEFORE the signature slot
+    const offset = tx.length - SIGNATURE_LENGTH;
+    const toSign = tx.slice(0, offset);
+
+    qCrypto.K12(toSign, digest, DIGEST_LENGTH);
+    const signature = qCrypto.schnorrq.sign(idPackage.privateKey, idPackage.publicKey, digest);
+
+    // Append signature
+    tx.set(signature, offset);
+
+    return tx;
+  };
+
   const broadcastTx = async (tx: Uint8Array): Promise<BroadcastResult> => {
-    const url = `${httpEndpoint}/v1/broadcast-transaction`;
-    const txEncoded = uint8ArrayToBase64(tx);
-    const body = { encodedTransaction: txEncoded };
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
-      // Parse the JSON response
-      const result = await response.json();
-      // Check if the response status is OK (status code 200-299)
-      if (!response.ok) {
-        console.error(`HTTP error! status: ${response.status}`);
-        console.log("broadcastTx:", response);
-      }
+      const txEncoded = uint8ArrayToBase64(tx);
+      const result = await qubicRpc.broadcastTransaction(txEncoded);
+
       return {
-        success: response.ok,
-        status: response.status,
+        success: true,
+        status: 200,
         result,
       };
     } catch (error) {
-      console.error("Error:", error);
-      throw error;
+      console.error("broadcastTx failed:", error);
+      return {
+        success: false,
+        status: 500,
+        result: error,
+      };
     }
   };
 
@@ -529,6 +545,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     walletConnectConnect: walletConnect.connect,
     walletConnectDisconnect: walletConnect.disconnect,
     walletConnectRequestAccounts: walletConnect.requestAccounts as () => Promise<WalletConnectAccount[]>,
+    walletConnectIsInitializing: walletConnect.isInitializing,
   };
 
   return (

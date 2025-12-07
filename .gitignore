@@ -26,3 +26,9 @@ reports
 *.njsproj
 *.sln
 *.sw?
+
+# Security & Private
+.env
+.env.*
+smart-contracts/
+SUBMISSION_KIT.md

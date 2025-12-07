@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { RiCloseLine } from "react-icons/ri";
 import { SiWalletconnect } from "react-icons/si";
 
 import { useModal } from "@/core/modals/hooks/useModal";
+import { useToast } from "@/core/toasts/hooks/useToast";
+import { ToastIds } from "@/core/toasts/toasts.types";
+
 import { generateQRCode } from "@/lib/qubic";
 import { Button } from "@/shared/components/Button";
 import { Typography } from "@/shared/components/Typography";
@@ -27,8 +31,15 @@ export const ConnectModal = () => {
   const [selectedMode, setSelectedMode] = useState<"none" | "metamask" | "walletconnect">("none");
   const [qrCode, setQrCode] = useState<string>("");
   const walletConnectTimer = useRef<NodeJS.Timeout | null>(null);
-  const { config, connect, getMetaMaskPublicId, walletConnectConnect, walletConnectRequestAccounts, disconnect } =
-    useQubicConnect();
+  const {
+    config,
+    connect,
+    getMetaMaskPublicId,
+    walletConnectConnect,
+    walletConnectRequestAccounts,
+    disconnect,
+    walletConnectIsInitializing,
+  } = useQubicConnect();
 
   const { closeModal } = useModal();
   const [accounts, setAccounts] = useState<WalletConnectAccount[]>([]);
@@ -67,27 +78,75 @@ export const ConnectModal = () => {
     };
   }, [selectedMode, walletConnectRequestAccounts]);
 
+  const { createToast } = useToast();
+
   /**
    * Handles the click event for connecting to Metamask.
    */
   const handleClickConnect = useCallback(async () => {
     try {
+      if (!window.ethereum?.isMetaMask) {
+        createToast(ToastIds.ALERT, {
+          title: "MetaMask Not Detected",
+          message: "It seems you are not using MetaMask. Please install MetaMask to use this feature.",
+          type: "error",
+        });
+        return;
+      }
+
       const snapId = config?.snapOrigin;
-      await connectSnap(snapId);
-      await getSnap();
+      console.log("Attempting to connect to Snap:", snapId);
+
+      try {
+        await connectSnap(snapId);
+      } catch (err) {
+        console.error("connectSnap failed:", err);
+        throw new Error(`Failed to connect to Snap: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      let installedSnap;
+      try {
+        installedSnap = await getSnap();
+        console.log("Installed Snap:", installedSnap);
+      } catch (err) {
+        console.error("getSnap failed:", err);
+        throw new Error("Failed to retrieve installed Snap information.");
+      }
+
+      if (!installedSnap) {
+        throw new Error("Qubic Snap was not detected after connection. Please try again.");
+      }
 
       // get publicId from snap
-      const publicKey = await getMetaMaskPublicId(0);
+      let publicKey;
+      try {
+        publicKey = await getMetaMaskPublicId(0);
+        console.log("Got Public Key:", publicKey);
+      } catch (err) {
+        console.error("getMetaMaskPublicId failed:", err);
+        throw new Error("Failed to retrieve public key from Snap. Please ensure you have approved the permissions.");
+      }
+
       const wallet: Wallet = {
         connectType: "mmSnap",
         publicKey,
       };
       connect(wallet);
       closeModal();
+      createToast(ToastIds.ALERT, {
+        title: "Wallet Connected",
+        message: "Successfully connected with MetaMask.",
+        type: "success",
+      });
     } catch (error) {
       console.error(error);
+      createToast(ToastIds.ALERT, {
+        title: "Connection Failed",
+        message: error instanceof Error ? error.message : "Failed to connect to MetaMask.",
+        type: "error",
+      });
     }
-  }, []);
+  }, [config, connect, getMetaMaskPublicId, closeModal, createToast]);
 
   // Generate WalletConnect URI and QR code (following qearn pattern exactly)
   const generateURI = async () => {
@@ -98,7 +157,7 @@ export const ConnectModal = () => {
       console.log("🔗 URI received:", uri);
 
       if (!uri) {
-        throw new Error("No URI generated from WalletConnect");
+        throw new Error("Failed to generate WalletConnect URI. Please try again.");
       }
 
       console.log("🔗 Generating QR code for URI...");
@@ -111,10 +170,21 @@ export const ConnectModal = () => {
       await approve();
       console.log("✅ WalletConnect approved! Connection established.");
 
+      createToast(ToastIds.ALERT, {
+        title: "Wallet Connected",
+        message: "Successfully connected with WalletConnect.",
+        type: "success",
+      });
+
       // Don't get accounts here - let the useEffect handle it
     } catch (error) {
       console.error("❌ WalletConnect connection failed:", error);
       setSelectedMode("none");
+      createToast(ToastIds.ALERT, {
+        title: "Connection Failed",
+        message: error instanceof Error ? error.message : "Failed to connect with WalletConnect.",
+        type: "error",
+      });
     }
   };
 
@@ -193,6 +263,9 @@ export const ConnectModal = () => {
 
   return (
     <Card className={styles.layout}>
+      <button className={styles.closeButton} onClick={closeModal}>
+        <RiCloseLine size={24} />
+      </button>
       <QubicLogo />
 
       {selectedMode === "none" && (
@@ -216,10 +289,11 @@ export const ConnectModal = () => {
               onClick={() => setSelectedMode("metamask")}
             />
             <Button
-              caption={"WalletConnect"}
+              caption={walletConnectIsInitializing ? "Initializing..." : "WalletConnect"}
               variant={"solid"}
               color={"secondary"}
               iconLeft={<SiWalletconnect />}
+              disabled={walletConnectIsInitializing}
               onClick={() => {
                 setSelectedMode("walletconnect");
                 generateURI();

@@ -1,0 +1,81 @@
+.container {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #1e232d;
+    border: 1px solid #2a2e39;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+    max-width: 400px;
+    color: #fff;
+    animation: slideIn 0.3s ease-out;
+
+    &.success {
+        border-left: 4px solid #00e676;
+
+        .icon {
+            color: #00e676;
+        }
+    }
+
+    &.error {
+        border-left: 4px solid #ff4d4d;
+
+        .icon {
+            color: #ff4d4d;
+        }
+    }
+
+    &.warning {
+        border-left: 4px solid #ffab40;
+
+        .icon {
+            color: #ffab40;
+        }
+    }
+
+    &.info {
+        border-left: 4px solid #2979ff;
+
+        .icon {
+            color: #2979ff;
+        }
+    }
+}
+
+.icon {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.message {
+    font-size: 12px;
+    color: #b2b5be;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

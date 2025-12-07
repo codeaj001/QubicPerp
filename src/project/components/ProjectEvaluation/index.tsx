@@ -85,7 +85,7 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ project, a
             });
             reset();
             closeModal();
-            navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_PROJECTS }));
+            navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.HISTORY }));
           },
           onError: () => {
             setLoading(false);

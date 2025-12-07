@@ -1,7 +1,5 @@
 import { RiDiscordFill, /*RiMediumFill, RiTelegramFill,*/ RiTwitterXFill } from "react-icons/ri";
 
-import { LAUNCHPAD_ROUTES } from "@/launchpad/launchpad.constants";
-
 export const MODULE_SHARED = "shared";
 
 /**
@@ -10,9 +8,35 @@ export const MODULE_SHARED = "shared";
  */
 export const navigationMenu = [
   {
-    title: "IDO Launchpad",
-    path: LAUNCHPAD_ROUTES.MAIN,
+    title: "Swap",
+    path: "/swap",
   },
+  {
+    title: "Perps",
+    path: "/perp",
+  },
+  {
+    title: "Lend",
+    path: "/lend",
+  },
+  {
+    title: "Predict",
+    path: "/predict",
+  },
+  {
+    title: "Stake",
+    path: "/stake",
+  },
+  /*
+  {
+    title: "Leaderboard",
+    path: "/leaderboard",
+  },
+  {
+    title: "Stats",
+    path: "/stats",
+  },
+  */
 ];
 
 /**

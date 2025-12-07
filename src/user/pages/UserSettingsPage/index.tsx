@@ -1,20 +1,15 @@
-import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import classNames from "clsx";
 
 import { getRoute } from "@/lib/router";
-import { ProjectsListByState } from "@/project/components/ProjectsListByState";
-import { ProjectStates } from "@/project/project.types";
 import { Loader } from "@/shared/components/Loader";
 import { Separator } from "@/shared/components/Separator";
 import { Tabs } from "@/shared/components/Tabs";
+import { Typography } from "@/shared/components/Typography";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
-import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
-import { UserProjects } from "../../components/UserProjects";
-import { UserTier } from "../../components/UserTier";
 import { USER_ROUTES } from "../../user.constants";
 import { UserSettingsTabs } from "../../user.types";
 import styles from "./UserSettingsPage.module.scss";
@@ -32,23 +27,14 @@ export const UserSettingsPage: React.FC = () => {
   const { wallet } = useQubicConnect();
   const params = useParams<UserSettingsPageParams>();
   const navigate = useNavigate();
-  const { data, isLoading: isLoadingTier, refetch } = useContractTier();
 
   useAppTitle("User settings");
 
-  useEffect(() => {
-    const fetchCurrentTier = async () => {
-      await refetch();
-    };
-
-    fetchCurrentTier();
-  }, [wallet?.publicKey]);
-
   if (!params?.tabId) {
-    return <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })} />;
+    return <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.OVERVIEW })} />;
   }
 
-  if (!wallet?.publicKey || !params.tabId || isLoadingTier) {
+  if (!wallet?.publicKey || !params.tabId) {
     return (
       <div className={classNames(styles.container, styles.center)}>
         <Loader size={42} className={styles.loader} />
@@ -63,15 +49,33 @@ export const UserSettingsPage: React.FC = () => {
    */
   const renderTab = () => {
     switch (params.tabId) {
-      case UserSettingsTabs.MY_PROJECTS:
-        return <UserProjects wallet={wallet.publicKey} />;
+      case UserSettingsTabs.HISTORY:
+        return (
+          <div className={styles.placeholder}>
+            <Typography variant="body" size="large">
+              Trade History Coming Soon
+            </Typography>
+          </div>
+        );
 
-      case UserSettingsTabs.CLAIM_TOKENS:
-        return <ProjectsListByState state={ProjectStates.CLOSED} />;
+      case UserSettingsTabs.PREFERENCES:
+        return (
+          <div className={styles.placeholder}>
+            <Typography variant="body" size="large">
+              Preferences Coming Soon
+            </Typography>
+          </div>
+        );
 
-      case UserSettingsTabs.MY_TIER:
+      case UserSettingsTabs.OVERVIEW:
       default:
-        return <UserTier wallet={wallet.publicKey} userTier={data.tierLevel} />;
+        return (
+          <div className={styles.placeholder}>
+            <Typography variant="body" size="large">
+              Account Overview Coming Soon
+            </Typography>
+          </div>
+        );
     }
   };
 
@@ -82,16 +86,16 @@ export const UserSettingsPage: React.FC = () => {
           size={"large"}
           tabs={[
             {
-              id: UserSettingsTabs.MY_TIER,
-              label: "Tier",
+              id: UserSettingsTabs.OVERVIEW,
+              label: "Overview",
             },
             {
-              id: UserSettingsTabs.MY_PROJECTS,
-              label: "Projects",
+              id: UserSettingsTabs.HISTORY,
+              label: "History",
             },
             {
-              id: UserSettingsTabs.CLAIM_TOKENS,
-              label: "Claim Tokens",
+              id: UserSettingsTabs.PREFERENCES,
+              label: "Preferences",
             },
           ]}
           activeId={params.tabId}

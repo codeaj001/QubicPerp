@@ -1,0 +1,88 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    color: #788199;
+    border-bottom: 1px solid #2a2e39;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 12px;
+    position: relative;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #1e232d;
+    }
+}
+
+.bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    z-index: 0;
+}
+
+.priceAsk,
+.priceBid,
+.size {
+    position: relative;
+    z-index: 1;
+}
+
+.priceAsk {
+    color: #ff4d4d;
+}
+
+.priceBid {
+    color: #00e676;
+}
+
+.size {
+    color: #b2b5be;
+}
+
+.asks {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+}
+
+.bids {
+    flex: 1;
+    overflow: hidden;
+}
+
+.spread {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #1e232d;
+    border-top: 1px solid #2a2e39;
+    border-bottom: 1px solid #2a2e39;
+
+    .lastPrice {
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .spreadValue {
+        font-size: 11px;
+        color: #788199;
+    }
+}

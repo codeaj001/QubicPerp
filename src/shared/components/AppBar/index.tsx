@@ -14,22 +14,18 @@ import { WalletAccount } from "@/wallet/components/WalletAccount";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./AppBar.module.scss";
-import isotype from "../../assets/images/isotype.png";
-import logo from "../../assets/images/logotype.png";
 import { Links } from "../../components/Links";
 import { IconButton } from "../IconButton";
 import { MobileMenu } from "../MobileMenu";
 
 export const AppBar: React.FC = () => {
-  const { isMobile, isTabletVertical } = useResponsive();
+  const { isMobile } = useResponsive();
   const { wallet } = useQubicConnect();
   const { y: scrollY } = useWindowScroll();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const headerHeight = scrollY > 5 ? "70px" : "90px";
 
   useLockBodyScroll(isMenuOpen);
-
-  const isMobileOrTabletVertical = isMobile || isTabletVertical;
 
   /**
    * Combines the base navigation menu with conditional user settings route
@@ -59,12 +55,9 @@ export const AppBar: React.FC = () => {
       }}
     >
       <div className={styles.container}>
-        <Link to={"/"}>
-          <img
-            src={isMobileOrTabletVertical ? isotype : logo}
-            alt="nostromo"
-            width={isMobileOrTabletVertical ? 100 : 140}
-          />
+        <Link to={"/"} className={styles.brandLink}>
+          <span className={styles.brand}>QubicPerp</span>
+          <span className={styles.tag}>TESTNET</span>
         </Link>
 
         {isMenuOpen && isMobile && <MobileMenu onClose={() => setIsMenuOpen(false)} />}

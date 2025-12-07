@@ -30,7 +30,7 @@ export const connectSnap = async (snapId: string | undefined, params: Record<"ve
   console.log("Connecting snap:", snapId);
   if (!snapId) {
     console.error("Invalid snapId provided");
-    return;
+    throw new Error("Invalid snapId provided");
   }
   try {
     if (!window.ethereum) {
@@ -45,6 +45,7 @@ export const connectSnap = async (snapId: string | undefined, params: Record<"ve
     console.log("Snap connected successfully:", snapId);
   } catch (error) {
     console.error("Failed to connect snap", error);
+    throw error;
   }
 };
 

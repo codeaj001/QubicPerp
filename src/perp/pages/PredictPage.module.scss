@@ -1,0 +1,205 @@
+.container {
+    padding: 24px;
+    padding-top: 90px;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #fff;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+
+    h1 {
+        font-size: 32px;
+        font-weight: 700;
+        background: linear-gradient(45deg, #fff, #8bf827);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+
+    .refreshBtn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: #131722;
+    border: 1px solid #2a2e39;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        border-color: #8bf827;
+    }
+}
+
+.cardImage {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    .category {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+.cardContent {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 16px 0;
+        line-height: 1.4;
+    }
+
+    .poolInfo {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        font-size: 13px;
+        color: #788199;
+
+        span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .value {
+            color: #fff;
+            font-weight: 600;
+        }
+    }
+
+    .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: auto;
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &.yesBtn {
+                background: rgba(0, 230, 118, 0.1);
+                color: #00e676;
+                border: 1px solid rgba(0, 230, 118, 0.2);
+
+                &:hover {
+                    background: #00e676;
+                    color: #000;
+                }
+            }
+
+            &.noBtn {
+                background: rgba(255, 82, 82, 0.1);
+                color: #ff5252;
+                border: 1px solid rgba(255, 82, 82, 0.2);
+
+                &:hover {
+                    background: #ff5252;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+.resolvedOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(19, 23, 34, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+
+    .result {
+        font-size: 32px;
+        font-weight: 800;
+
+        &.yes {
+            color: #00e676;
+        }
+
+        &.no {
+            color: #ff5252;
+        }
+    }
+}
+
+.adminPanel {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #2a2e39;
+
+    button {
+        width: 100%;
+        background: #2a2e39;
+        color: #fff;
+        border: none;
+        padding: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+
+        &:hover {
+            background: #363c4e;
+        }
+    }
+}

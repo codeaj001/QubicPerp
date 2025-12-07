@@ -42,7 +42,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   return (
     <>
       {ModalContent && id && (
-        <Backdrop>
+        <Backdrop onClick={handleClose}>
           <ModalContent {...(data ?? {})} handleClose={handleClose} />
         </Backdrop>
       )}

@@ -125,7 +125,7 @@ export const useUpsertProject = () => {
         title: "Changes saved successfully",
       });
 
-      navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_PROJECTS }));
+      navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.HISTORY }));
     },
   });
 };

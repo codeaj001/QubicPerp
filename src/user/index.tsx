@@ -27,8 +27,8 @@ const routes: RouteObject[] = [
     element: <AppLayout />,
     children: [
       {
-        path: "",
-        element: <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })} />,
+        path: USER_ROUTES.SETTINGS,
+        element: <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.OVERVIEW })} />,
       },
       {
         path: "",

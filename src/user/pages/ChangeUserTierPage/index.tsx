@@ -61,7 +61,7 @@ export const ChangeUserTierPage: React.FC = () => {
               setLoading(true);
               await changeTier(tier.id);
               closeModal();
-              navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
+              navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.OVERVIEW }));
             },
           },
           onDecline: {
@@ -80,7 +80,7 @@ export const ChangeUserTierPage: React.FC = () => {
     <>
       <NavigatorTitle
         text="Upgrade Tier"
-        backPath={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })}
+        backPath={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.OVERVIEW })}
       />
       <TierSelector
         currentTierId={data.tierLevel}

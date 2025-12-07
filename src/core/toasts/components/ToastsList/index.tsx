@@ -38,7 +38,7 @@ export const ToastsList: React.FC<ToastsListProps<ToastIds>> = ({ data = {} }) =
               transition={{ duration: 0.3 }}
             >
               <BaseToast key={`--toast-${key}`} refKey={key} timeout={toast.timeout}>
-                <Component key={key} {...toast.data} />
+                <Component key={key} {...(toast.data as any)} />
               </BaseToast>
             </motion.div>
           );

@@ -151,7 +151,7 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
     return (
       <div className={classNames(styles.grid, styles.spacing)}>
         <Typography variant={"body"} size={"xlarge"} className={styles.title} textAlign={"center"}>
-          Select a tier to start investing in NOSTROMO Projects and unlock features
+          Select a tier to start investing in QubicPerp Projects and unlock features
         </Typography>
         <TierSelector currentTierId={userTier} isLoading={isLoadingRegisterInTier} onSelectTier={handleClickSetTier} />
       </div>

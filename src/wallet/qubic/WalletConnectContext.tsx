@@ -25,6 +25,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
   const [sessionTopic, setSessionTopic] = useState<string>("");
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [isClientInitializing, setIsClientInitializing] = useState<boolean>(true);
 
   const connect = async () => {
     if (!signClient) {
@@ -189,6 +190,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
       // If already initialized, use the existing client
       if (globalSignClient) {
         setSignClient(globalSignClient);
+        setIsClientInitializing(false);
 
         // Restore session if exists
         const storedTopic = localStorage.getItem("sessionTopic");
@@ -269,6 +271,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
         console.error("Failed to initialize WalletConnect:", error);
       } finally {
         isInitializing = false;
+        setIsClientInitializing(false);
       }
     };
 
@@ -288,6 +291,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
     signClient,
     sessionTopic,
     isConnecting,
+    isInitializing: isClientInitializing,
     isConnected,
     connect,
     disconnect,

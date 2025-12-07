@@ -45,6 +45,13 @@ export interface ToastState<T extends ToastIds> {
  */
 export enum ToastIds {
   CONFIRMATION = "confirmation-toast",
+  ALERT = "alert-toast", // Added for Perp
+}
+
+export interface AlertToastProps {
+  title: string;
+  message: string;
+  type: "success" | "error" | "info" | "warning";
 }
 
 /**
@@ -55,4 +62,5 @@ export enum ToastIds {
  */
 export type ToastData = {
   [ToastIds.CONFIRMATION]: ConfirmationToastProps;
+  [ToastIds.ALERT]: AlertToastProps;
 };

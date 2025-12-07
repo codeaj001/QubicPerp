@@ -95,6 +95,7 @@ export interface WalletConnectContextType {
   signClient: SignClient | null;
   sessionTopic: string;
   isConnecting: boolean;
+  isInitializing: boolean;
   isConnected: boolean;
   connect: () => Promise<{ uri: string; approve: () => Promise<void> }>;
   disconnect: () => Promise<void>;
@@ -341,6 +342,7 @@ export interface QubicConnectContextValue {
   walletConnectConnect: () => Promise<{ uri: string; approve: () => Promise<void> }>;
   walletConnectDisconnect: () => Promise<void>;
   walletConnectRequestAccounts: () => Promise<WalletConnectAccount[]>;
+  walletConnectIsInitializing: boolean;
 }
 
 // ============================================================================

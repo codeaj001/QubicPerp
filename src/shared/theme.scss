@@ -35,34 +35,37 @@ $yellow-06: rgb(30 30 30 / 80%); // Transparent dark yellow
 $yellow-07: #9c9c30; // Olive yellow
 $yellow-08: #1b1b08; // Very dark yellow
 
+// Gray color palette
+$gray-01: #1a1a1a;
+$gray-02: #333333;
+$gray-03: #4d4d4d;
+$gray-04: #808080;
+$gray-05: #999999;
+$gray-06: #b3b3b3;
+$gray-07: #cccccc;
+$gray-08: #e6e6e6;
+
 $orange-03: #ffab38;
 
 // Breakpoints for responsive design
 $breakpoints: (
-  mobile: (
-    max: 767px, // Maximum width for mobile devices
+  mobile: (max: 767px, // Maximum width for mobile devices
   ),
-  mobile-vertical: (
-    max: 599px, // Maximum width for vertical mobile devices
+  mobile-vertical: (max: 599px, // Maximum width for vertical mobile devices
   ),
-  mobile-horizontal: (
-    min: 600px, // Minimum width for horizontal mobile devices
+  mobile-horizontal: (min: 600px, // Minimum width for horizontal mobile devices
     max: 767px, // Maximum width for horizontal mobile devices
   ),
-  tablet: (
-    min: 768px, // Minimum width for tablets
+  tablet: (min: 768px, // Minimum width for tablets
     max: 1439px, // Maximum width for tablets
   ),
-  tablet-vertical: (
-    min: 768px, // Minimum width for vertical tablets
+  tablet-vertical: (min: 768px, // Minimum width for vertical tablets
     max: 1023px, // Maximum width for vertical tablets
   ),
-  tablet-horizontal: (
-    min: 1024px, // Minimum width for horizontal tablets
+  tablet-horizontal: (min: 1024px, // Minimum width for horizontal tablets
     max: 1439px, // Maximum width for horizontal tablets
   ),
-  desktop: (
-    min: 1440px, // Minimum width for desktop devices
+  desktop: (min: 1440px, // Minimum width for desktop devices
   ),
 );
 
@@ -78,29 +81,39 @@ $breakpoints: (
       @media (min-width: $min) and (max-width: $max) {
         @content;
       }
-    } @else if $min {
+    }
+
+    @else if $min {
       @media (min-width: $min) {
         @content;
       }
-    } @else if $max {
+    }
+
+    @else if $max {
       @media (max-width: $max) {
         @content;
       }
-    } @else {
+    }
+
+    @else {
       @warn "No 'min' or 'max' defined for breakpoint `#{$breakpoint}`.";
     }
-  } @else {
+  }
+
+  @else {
     @warn "Breakpoint `#{$breakpoint}` is not defined in the breakpoints map.";
   }
 }
 
 // Mixin for applying theme based on color scheme preference
 @mixin theme($scheme) {
-  @if $scheme == dark or $scheme == light {
+  @if $scheme ==dark or $scheme ==light {
     @media (prefers-color-scheme: #{$scheme}) {
       @content;
     }
-  } @else {
+  }
+
+  @else {
     @warn "Color scheme `#{$scheme}` is not valid. Use 'light' or 'dark'.";
   }
 }
@@ -148,7 +161,9 @@ $breakpoints: (
 
 // Mixin for space background animation
 @mixin space() {
-  &:after, &:before {
+
+  &:after,
+  &:before {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -181,8 +196,9 @@ $breakpoints: (
 
 @mixin bottomLighting() {
   position: relative;
-  
-  &:after, &:before {
+
+  &:after,
+  &:before {
     content: "";
     position: absolute;
   }

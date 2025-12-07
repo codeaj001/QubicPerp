@@ -59,7 +59,7 @@ export const InvestmentForm: React.FC<InvestmentFormProps> = ({ user, token, isL
       </div>
       <div className={styles.actions}>
         <Button caption="Invest" isLoading={isLoading} disabled={!isValid} color="primary" size="small" />
-        {user.tier.id < Tiers.TIER_WARRIOR && (
+        {user.tier.id < Tiers.TIER_DIAMOND && (
           <Button
             iconLeft={<RiArrowUpCircleLine />}
             caption="Upgrade Tier"

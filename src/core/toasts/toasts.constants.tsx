@@ -1,4 +1,6 @@
 import { ConfirmationToast } from "./components/ConfirmationToast";
+import { AlertToast } from "./components/AlertToast";
+
 import { ToastData, ToastIds } from "./toasts.types";
 
 /**
@@ -11,4 +13,5 @@ import { ToastData, ToastIds } from "./toasts.types";
  */
 export const toasts: { [K in ToastIds]: React.FC<ToastData[K]> } = {
   [ToastIds.CONFIRMATION]: ConfirmationToast,
+  [ToastIds.ALERT]: AlertToast,
 };
