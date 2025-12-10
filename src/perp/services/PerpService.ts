@@ -17,8 +17,6 @@ export interface OrderParams {
 import { publicKeyStringToBytes } from "@qubic-lib/qubic-ts-library/dist/converter/converter";
 
 export class PerpService {
-  constructor() {}
-
   buildTransaction(data: {
     sourcePublicKey: string;
     destinationPublicKey: string;

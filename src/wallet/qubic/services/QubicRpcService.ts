@@ -37,10 +37,19 @@ export interface BroadcastResponse {
 }
 
 export class QubicRpcService {
-  constructor(private baseUrl: string) {}
+  // The baseUrl is now passed directly to the fetchJson method or needs to be managed differently
+  // as the constructor that initialized it has been removed.
+  // For this change, we'll assume the baseUrl will be provided via another mechanism or made static.
+  // However, to maintain functionality with the existing `qubicRpc` instance,
+  // we need to make `baseUrl` a static property or pass it to `fetchJson`.
+  // Given the instruction is *only* to remove the constructor, and not to refactor `baseUrl` usage,
+  // this will lead to `this.baseUrl` being undefined.
+  // To make the code syntactically valid and runnable (even if semantically changed),
+  // we'll make `baseUrl` a static property initialized from the environment.
+  private static baseUrl: string = import.meta.env.VITE_RPC_URL || RPC_ENDPOINTS.TESTNET;
 
   private async fetchJson<T>(path: string, options?: RequestInit): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, options);
+    const response = await fetch(`${QubicRpcService.baseUrl}${path}`, options);
     if (!response.ok) {
       throw new Error(`RPC Error: ${response.statusText}`);
     }
@@ -149,4 +158,4 @@ export class QubicRpcService {
   }
 }
 
-export const qubicRpc = new QubicRpcService(import.meta.env.VITE_RPC_URL || RPC_ENDPOINTS.TESTNET);
+export const qubicRpc = new QubicRpcService();
